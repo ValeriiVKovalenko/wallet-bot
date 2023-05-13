@@ -1,11 +1,10 @@
-package telegrambot.execurors.transaction;
+package telegrambot.execurors;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import telegrambot.config.interceptor.UserDataContextHolder;
-import telegrambot.execurors.AbstractCommandExecutor;
 import telegrambot.model.Card;
-import telegrambot.model.enums.DraftStatus;
+import telegrambot.model.enums.DRAFT_STATUS;
 import telegrambot.model.enums.StateEnum;
 import telegrambot.model.enums.TransactionTypeEnum;
 import telegrambot.model.util.Command;
@@ -42,12 +41,12 @@ public class CreateTransactionExecutor extends AbstractCommandExecutor {
 
 
     @Override
-    public boolean isSystemExecutor() {
+    public boolean isSystemHandler() {
         return false;
     }
 
     @Override
-    public void exec() throws IllegalAccessException {
+    public void processMessage() throws IllegalAccessException {
 
         if (UserDataContextHolder.getInputtedTextCommand().equals(THIS_CMD)) {
             transactionDraftRepository.deleteAll();
@@ -215,7 +214,7 @@ public class CreateTransactionExecutor extends AbstractCommandExecutor {
         State state = stateRepository.findByName(CONFIRMATION.getState());
         currentConditionRepository.updateCommandAndState(command.getId(), state.getId());
 
-        transactionDraftRepository.updateAmountAndStatus(amount, DraftStatus.BUILT.name());
+        transactionDraftRepository.updateAmountAndStatus(amount, DRAFT_STATUS.BUILT.name());
 
         TransactionDraft transactionDraft = transactionDraftRepository.getFirstDraft();
         String answerMsg = "Confirm transaction:"
@@ -327,7 +326,7 @@ public class CreateTransactionExecutor extends AbstractCommandExecutor {
 
 
     @Override
-    public boolean canExec() {
+    public boolean canProcessMessage() {
         String currentCommandName = currentConditionRepository.getCurrentCondition().getCommand().getName();
         String message = UserDataContextHolder.getInputtedTextCommand();
 
