@@ -1,13 +1,12 @@
-package telegrambot.execurors.transaction;
+package telegrambot.execurors;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import telegrambot.config.interceptor.UserDataContextHolder;
-import telegrambot.execurors.AbstractCommandExecutor;
 import telegrambot.model.Card;
 import telegrambot.model.Transaction;
-import telegrambot.model.enums.DraftStatus;
+import telegrambot.model.enums.DRAFT_STATUS;
 import telegrambot.model.enums.TransactionTypeEnum;
 import telegrambot.model.util.Command;
 import telegrambot.model.util.CurrentCondition;
@@ -37,7 +36,7 @@ public class ConfirmCreateTransactionExecutor extends AbstractCommandExecutor {
 
     @Transactional
     @Override
-    public void exec() {
+    public void processMessage() {
         CurrentCondition currentCondition = currentConditionRepository.getCurrentCondition();
         String currentCommandName = currentCondition.getCommand().getName();
 
@@ -61,9 +60,9 @@ public class ConfirmCreateTransactionExecutor extends AbstractCommandExecutor {
             return;
         }
 
-        DraftStatus draftStatus = draft.get().getStatus();
-        if (draftStatus.equals(DraftStatus.BUILT) || draftStatus.equals(DraftStatus.SAVING)) {
-            transactionDraftRepository.updateStatus(DraftStatus.SAVING.name());
+        DRAFT_STATUS draftStatus = draft.get().getStatus();
+        if (draftStatus.equals(DRAFT_STATUS.BUILT) || draftStatus.equals(DRAFT_STATUS.SAVING)) {
+            transactionDraftRepository.updateStatus(DRAFT_STATUS.SAVING.name());
             transactionToSave = transactionRepository.save(Transaction.builder()
                     .card(draft.get().getCard())
                     .transactionType(draft.get().getType())
@@ -112,12 +111,12 @@ public class ConfirmCreateTransactionExecutor extends AbstractCommandExecutor {
     }
 
     @Override
-    public boolean isSystemExecutor() {
+    public boolean isSystemHandler() {
         return false;
     }
 
     @Override
-    public boolean canExec() {
+    public boolean canProcessMessage() {
         return UserDataContextHolder.getInputtedTextCommand().equals(THIS_CMD);
     }
 
