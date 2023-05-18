@@ -1,12 +1,11 @@
-package telegrambot.execurors.card;
+package telegrambot.execurors;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import telegrambot.config.interceptor.UserDataContextHolder;
-import telegrambot.execurors.AbstractCommandExecutor;
 import telegrambot.model.Card;
-import telegrambot.model.enums.DraftStatus;
+import telegrambot.model.enums.DRAFT_STATUS;
 import telegrambot.model.util.Command;
 import telegrambot.model.util.CurrentCondition;
 import telegrambot.model.util.State;
@@ -32,18 +31,18 @@ public class ConfirmCreateCardExecutor extends AbstractCommandExecutor {
     private static final String THIS_CMD = CREATE_CARD_CONFIRM_COMMAND.getCommand();
 
     @Override
-    public boolean isSystemExecutor() {
+    public boolean isSystemHandler() {
         return false;
     }
 
     @Override
-    public boolean canExec() {
+    public boolean canProcessMessage() {
         return UserDataContextHolder.getInputtedTextCommand().equals(THIS_CMD);
     }
 
     @Transactional
     @Override
-    public void exec() {
+    public void processMessage() {
         CurrentCondition currentCondition = currentConditionRepository.getCurrentCondition();
         String currentConditionName = currentCondition.getCommand().getName();
 
@@ -67,9 +66,9 @@ public class ConfirmCreateCardExecutor extends AbstractCommandExecutor {
             return;
         }
 
-        DraftStatus draftStatus = draft.get().getStatus();
-        if (draftStatus.equals(DraftStatus.BUILT) || draftStatus.equals(DraftStatus.SAVING)) {
-            cardDraftRepository.updateStatus(DraftStatus.SAVING.name());
+        DRAFT_STATUS draftStatus = draft.get().getStatus();
+        if (draftStatus.equals(DRAFT_STATUS.BUILT) || draftStatus.equals(DRAFT_STATUS.SAVING)) {
+            cardDraftRepository.updateStatus(DRAFT_STATUS.SAVING.name());
             cardToSave = cardRepository.save(Card.builder()
                     .name(draft.get().getName())
                     .balance(draft.get().getBalance())

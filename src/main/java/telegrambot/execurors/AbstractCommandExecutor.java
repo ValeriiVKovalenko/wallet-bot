@@ -33,16 +33,16 @@ public abstract class AbstractCommandExecutor {
                 });
     }
 
-    public abstract boolean isSystemExecutor();
+    public abstract boolean isSystemHandler();
 
     /**
      * Retrieve last message from DB
      * Remove last msg from DB and set current State to previous
      * Fails with default SendMessage if current condition wasn`t set, or if last msg wasn`t removed
      */
-    public abstract void exec() throws IllegalAccessException;
+    public abstract void processMessage() throws IllegalAccessException;
 
-    public abstract boolean canExec();
+    public abstract boolean canProcessMessage();
 
     /**
      * Must clean and check if all handlerData cleaned

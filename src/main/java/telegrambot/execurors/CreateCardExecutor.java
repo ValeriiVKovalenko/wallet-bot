@@ -21,8 +21,6 @@ import static telegrambot.model.enums.StateEnum.*;
 
 @AllArgsConstructor
 @Component
-
-//TODO: HERE!
 public class CreateCardExecutor extends AbstractCommandExecutor {
     private final CardDraftService cardDraftService;
     private final CurrentConditionService currentConditionService;
