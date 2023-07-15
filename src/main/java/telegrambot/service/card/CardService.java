@@ -1,7 +1,7 @@
 package telegrambot.service.card;
 
-import telegrambot.model.dto.CardReqDto;
-import telegrambot.model.dto.CardResDto;
+import telegrambot.model.dto.card.CardReqDto;
+import telegrambot.model.dto.card.CardResDto;
 import telegrambot.model.entity.Card;
 
 import java.math.BigDecimal;
@@ -24,4 +24,6 @@ public interface CardService {
     CardResDto createCard(String dbName, CardReqDto cardReqDto);
 
     CardResDto getCardById(Long id);
+
+    void deleteCard(Long id);
 }

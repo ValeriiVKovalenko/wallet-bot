@@ -24,4 +24,7 @@ public class Card {
     private String name;
 
     private BigDecimal balance;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }

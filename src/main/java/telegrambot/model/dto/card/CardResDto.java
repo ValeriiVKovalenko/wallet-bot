@@ -1,4 +1,4 @@
-package telegrambot.model.dto;
+package telegrambot.model.dto.card;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,4 +15,5 @@ public class CardResDto {
     private Long id;
     private String name;
     private BigDecimal balance;
+    private boolean isDeleted;
 }

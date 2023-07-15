@@ -62,7 +62,7 @@ public class CardServiceImpl implements CardService {
     public CardResDto updateCard(CardReqDto CardReqDto) {
         Card card = cardRepository.getById(CardReqDto.getId());
         if (card == null) {
-            throw new IllegalStateException("Card with id " + CardReqDto.getId() + " is not found,");
+            throw new ApiDefaultException("Card with id " + CardReqDto.getId() + " is not found");
         }
         card.setName(CardReqDto.getName());
         card.setBalance(CardReqDto.getBalance());
@@ -107,5 +107,14 @@ public class CardServiceImpl implements CardService {
                 .name(cardById.getName())
                 .balance(cardById.getBalance())
                 .build();
+    }
+
+    @Override
+    public void deleteCard(Long id) {
+        Card cardById = cardRepository.getById(id);
+        if (cardById == null) {
+            throw new ApiDefaultException("Card with id is not found");
+        }
+        cardRepository.delete(id);
     }
 }
